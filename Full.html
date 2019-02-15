@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>360&deg; Image</title>
+    <meta name="description" content="360&deg; Image - A-Frame">
+    <script src="main.js"></script>
+    <script scr="sphere.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+
+  </head>
+  <body>
+    <a-scene id="sample">
+      <a-sky src="puydesancy.jpg" rotation="0 -130 0"></a-sky>
+      <a-text font="kelsonsans" value="Wow VR 360 degree" width="6" position="-2.5 0.25 -1.5"
+              rotation="0 15 0"></a-text>
+             <!-- <a-sphere position="0 -5 -20" radius="6" color="purple" onclick="lod()"></a-sphere> -->
+              <a-entity geometry="primitive: sphere" link="href: index.html" position="0 5 -20" radius="16"></a-entity>
+
+      <a-camera>
+        <a-cursor fuse="true" fuse-timeout="1000" color="red"></a-cursor>
+      </a-camera>
+    </a-scene>
+    <script>
+  // Initialize Firebase
+  var list = ["1 0 3","2 2 2","1 3 6","5 2 0.5"];
+  var i=0,j=0;
+  var config = {
+    apiKey: "AIzaSyCvd8j3PBcCaYTh0KIOfqN5cb4kZf_9GGs",
+    authDomain: "camios.firebaseapp.com",
+    databaseURL: "https://camios.firebaseio.com",
+    projectId: "camios",
+    storageBucket: "camios.appspot.com",
+    messagingSenderId: "283026776347"
+  };
+  firebase.initializeApp(config);
+  var ref = firebase.database().ref("url/");
+
+ref.orderByKey().on("child_added", function(data) {
+//alert(data.val());
+console.log(data.val());
+//var sceneEl = document.querySelector('a-scene');
+var sph = document.createElement('a-sphere');
+// sph.setAttribute("geometry","primitive: sphere");
+sph.setAttribute("src",data.val());
+sph.setAttribute("id",data.val());
+sph.setAttribute("position",""+j+" 5 20");
+sph.setAttribute("radius","6");
+//sph.setAttribute("onclick",lod(data.val()));
+document.getElementById("sample").appendChild(sph);
+document.getElementById(data.val()).onclick = function() {lod(data.val())};
+
+j=j+20;
+   //container.appendChild(img);
+    i=i+1;
+    
+}, function (error) {
+  //alert("fgc");
+   console.log("Error: " + error.code);
+});
+
+
+function lod(sr)
+{ 
+  //alert(sr);
+  window.location.href = 'result.html' + '#' + sr;
+//window.open("result.html", '_blank')
+}
+</script>
+  </body>
+</html>

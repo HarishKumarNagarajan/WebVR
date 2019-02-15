@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>Upload</title>
+</head>
+<body>
+	<H1> YOU CAN UPLOAD MAX OF TWO IMAGES AT A TIME <br>
+<input id="up" type="file" multiple="multiple" /><br>
+<button id="myButton" class="float-left submit-button" >View</button>
+<script type="text/javascript">
+    document.getElementById("myButton").onclick = function () {
+        location.href = "Full.html";
+    };
+</script>
+<script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCvd8j3PBcCaYTh0KIOfqN5cb4kZf_9GGs",
+    authDomain: "camios.firebaseapp.com",
+    databaseURL: "https://camios.firebaseio.com",
+    projectId: "camios",
+    storageBucket: "camios.appspot.com",
+    messagingSenderId: "283026776347"
+  };
+  firebase.initializeApp(config);
+  	console.log("hello")
+  var fileButton = document.getElementById("up");
+              fileButton.addEventListener('change', function(e){
+                  var file = e.target.files[0];
+                  var storageRef = firebase.storage().ref(file.name).put(file);
+					storageRef.on('state_changed', (snapshot) => {
+							// Observe state change events such as progress, pause, and resume
+								}, (error) => {
+										// Handle unsuccessful uploads
+										console.log(error);
+									}, () => {
+										// Do something once upload is complete
+	storageRef.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+	var name= file.name;
+	console.log(file.name);
+	name = name.substring(0, name.indexOf('.'));
+	console.log(name);
+	var dbref=firebase.database();
+			dbref.ref().child('url/' + name).set(downloadURL);
+			alert("iamge 1 uploaded");
+  });
+	
+  
+								});
+					var file1= e.target.files[1];
+                  var storageRef1 = firebase.storage().ref(file1.name).put(file1);
+                  storageRef1.on('state_changed', (snapshot) => {
+							// Observe state change events such as progress, pause, and resume
+								}, (error) => {
+										// Handle unsuccessful uploads
+										console.log(error);
+									}, () => {
+                  storageRef1.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+    console.log('File available at', downloadURL);
+	var name1= file1.name;
+	console.log(file1.name);
+	name1 = name1.substring(0, name1.indexOf('.'));
+	console.log(name1);
+	var dbref1=firebase.database();
+			dbref1.ref().child('url/' + name1).set(downloadURL);
+			alert("iamge 2 uploaded");
+  });
+                  });
+			  });  
+</script>
+</body>
+</html>
